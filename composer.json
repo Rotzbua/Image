@@ -32,8 +32,7 @@
             "Gregwar\\Image": ""
         }
     },
-  	"scripts": {
-		"test": "./vendor/bin/phpunit --version && ./vendor/bin/phpunit tests"
-	},
-
+    "scripts": {
+        "test": "./vendor/bin/phpunit --version && ./vendor/bin/phpunit tests"
+    }
 }
