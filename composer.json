@@ -33,6 +33,6 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit --version && ./vendor/bin/phpunit tests"
+        "test": "./vendor/bin/phpunit --version && ./vendor/bin/phpunit -c phpunit.xml.dist"
     }
 }
