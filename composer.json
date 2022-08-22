@@ -24,6 +24,7 @@
         "phpunit/phpunit": "^9"
     },
     "suggest": {
+        "ext-exif": "Additional check for file type.",
         "behat/transliterator": "Transliterator provides ability to set non-latin1 pretty names"
     },
     "target-dir": "Gregwar/Image",
