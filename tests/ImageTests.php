@@ -1,14 +1,14 @@
 <?php
 
 use Gregwar\Cache\Cache;
-use Gregwar\Cache\CacheInterface;
 use Gregwar\Image\Image;
 use Gregwar\Image\ImageColor;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit testing for Image.
  */
-class ImageTests extends \PHPUnit\Framework\TestCase
+class ImageTests extends TestCase
 {
     /**
      * Testing the basic width & height.
@@ -51,8 +51,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
         $out = $this->output('monalisa_small.jpg');
         $image
             ->resize('50%')
-            ->save($out)
-            ;
+            ->save($out);
 
         self::assertFileExists($out);
 
@@ -117,7 +116,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
     public function testDefaultCacheSystem(): void
     {
         $image = $this->open('monalisa.jpg');
-        self::assertInstanceOf('Gregwar\Cache\Cache', $image->getCacheSystem());
+        self::assertInstanceOf(Cache::class, $image->getCacheSystem());
     }
 
     public function testCustomCacheSystem(): void
@@ -252,7 +251,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
     public function testTransparent(): void
     {
         $gif = $this->output('transparent.gif');
-        $i = Image::create(200, 100)
+        Image::create(200, 100)
             ->fill('transparent')
             ->save($gif, 'gif');
 
@@ -277,7 +276,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
 
     public function testNonExistingFileNoFallback(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         Image::open('non_existing_file.jpg')
             ->useFallback(false)
@@ -376,32 +375,40 @@ class ImageTests extends \PHPUnit\Framework\TestCase
         self::assertStringContainsString('davinci', $prefix1);
         self::assertStringContainsString('davinci', $prefix2);
         self::assertNotSame($prefix1, $prefix2);
+    }
 
-        $transliterator = '\Behat\Transliterator\Transliterator';
+    /**
+     * Test pretty name with optional `Behat\Transliterator\Transliterator`.
+     */
+    public function testPrettyNameTransliterator(): void
+    {
+        $transliterator = 'Behat\Transliterator\Transliterator';
 
-        if (class_exists($transliterator)) {
-            $nonLatinName1 = 'ダヴィンチ';
-            $nonLatinOutput1 = $this->open('monalisa.jpg')
-                ->resize(100, 50)->negate()
-                ->setPrettyName($nonLatinName1, false)
-                ->guess();
-
-            self::assertContains(
-                $transliterator::urlize($transliterator::transliterate($nonLatinName1)),
-                $nonLatinOutput1
-            );
-
-            $nonLatinName2 = 'давинчи';
-            $nonLatinOutput2 = $this->open('monalisa.jpg')
-                ->resize(100, 55)->negate()
-                ->setPrettyName($nonLatinName2)
-                ->guess();
-
-            self::assertContains(
-                $transliterator::urlize($transliterator::transliterate($nonLatinName2)),
-                $nonLatinOutput2
-            );
+        if (!class_exists($transliterator)){
+            self::markTestSkipped('Optional '.$transliterator.' not available.');
         }
+
+        $nonLatinName1   = 'ダヴィンチ';
+        $nonLatinOutput1 = $this->open('monalisa.jpg')
+            ->resize(100, 50)->negate()
+            ->setPrettyName($nonLatinName1, false)
+            ->guess();
+
+        self::assertStringContainsString(
+            $transliterator::urlize($transliterator::transliterate($nonLatinName1)),
+            $nonLatinOutput1
+        );
+
+        $nonLatinName2   = 'давинчи';
+        $nonLatinOutput2 = $this->open('monalisa.jpg')
+            ->resize(100, 55)->negate()
+            ->setPrettyName($nonLatinName2)
+            ->guess();
+
+        self::assertStringContainsString(
+            $transliterator::urlize($transliterator::transliterate($nonLatinName2)),
+            $nonLatinOutput2
+        );
     }
 
     /**
@@ -481,10 +488,10 @@ class ImageTests extends \PHPUnit\Framework\TestCase
         $dir = $this->output('');
         `rm -rf $dir`;
         if( !mkdir($dir) && !is_dir($dir) ){
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         if( !mkdir($concurrentDirectory = $this->output('cache')) && !is_dir($concurrentDirectory) ){
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
     }
 }

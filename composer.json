@@ -21,7 +21,8 @@
     },
     "require-dev": {
         "sllh/php-cs-fixer-styleci-bridge": "~1.0",
-        "phpunit/phpunit": "^9"
+        "phpunit/phpunit": "^9.5.22",
+        "behat/transliterator": "^1.5"
     },
     "suggest": {
         "behat/transliterator": "Transliterator provides ability to set non-latin1 pretty names"
