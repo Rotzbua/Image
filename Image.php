@@ -96,6 +96,7 @@ class Image
         'webp'  => 'webp',
         'png'   => 'png',
         'gif'   => 'gif',
+        'avif'   => 'avif',
     );
 
     /**
@@ -685,6 +686,10 @@ class Image
 
             if ($type == 'webp') {
                 $success = $this->getAdapter()->saveWebP($file, $quality);
+            }
+
+            if ( $type==='avif') {
+                $success = $this->getAdapter()->saveAvif($file, $quality);
             }
 
             if (!$success) {
