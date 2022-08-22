@@ -102,6 +102,46 @@ class ImageTests extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Testing to create an image WEBP.
+     */
+    public function testCreateImageWebp(): void
+    {
+        $black = $this->output('black.webp');
+    
+        Image::create(150, 200)
+            ->fill('black')
+            ->save($black, 'webp');
+    
+        $i = imagecreatefromwebp($black);
+        self::assertFileExists($black);
+        self::assertSame(150, imagesx($i));
+        self::assertSame(200, imagesy($i));
+    
+        $j = imagecolorat($i, 40, 40);
+        self::assertSame(0, $j);
+    }
+
+    /**
+     * Testing to create an image AVIF.
+     */
+    public function testCreateImageAvif(): void
+    {
+        $black = $this->output('black.avif');
+        
+        Image::create(150, 200)
+            ->fill('black')
+            ->save($black, 'avif');
+        
+        $i = imagecreatefromavif($black);
+        self::assertFileExists($black);
+        self::assertSame(150, imagesx($i));
+        self::assertSame(200, imagesy($i));
+        
+        $j = imagecolorat($i, 40, 40);
+        self::assertSame(0, $j);
+    }
+
+    /**
      * Testing type guess.
      */
     public function testGuess(): void
@@ -112,6 +152,10 @@ class ImageTests extends \PHPUnit\Framework\TestCase
         self::assertSame('png', $image->guessType());
         $image = $this->open('monalisa.gif');
         self::assertSame('gif', $image->guessType());
+        $image = $this->open('monalisa.webp');
+        self::assertSame('webp', $image->guessType());
+        $image = $this->open('monalisa.avif');
+        self::assertSame('avif', $image->guessType());
     }
 
     public function testDefaultCacheSystem(): void
