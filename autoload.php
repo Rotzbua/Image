@@ -11,7 +11,7 @@ if (file_exists($vendors)) {
 spl_autoload_register(function ($className) {
     $namespace = 'Gregwar\\Image';
 
-    if (strpos($className, $namespace) === 0) {
+    if ( str_starts_with($className, $namespace) ) {
         $className = str_replace($namespace, '', $className);
         $fileName = __DIR__.'/'.str_replace('\\', '/', $className).'.php';
         if (file_exists($fileName)) {

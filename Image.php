@@ -2,9 +2,14 @@
 
 namespace Gregwar\Image;
 
+use BadFunctionCallException;
+use Exception;
 use Gregwar\Cache\CacheInterface;
 use Gregwar\Image\Adapter\AdapterInterface;
 use Gregwar\Image\Exceptions\GenerationError;
+use InvalidArgumentException;
+use ReflectionClass;
+use RuntimeException;
 
 /**
  * Images handling class.
@@ -301,7 +306,7 @@ class Image
         return $this->adapter;
     }
 
-    public function setAdapter($adapter)
+    public function setAdapter($adapter): void
     {
         if ($adapter instanceof Adapter\Adapter) {
             $this->adapter = $adapter;
@@ -318,11 +323,10 @@ class Image
                     $this->adapter = new Adapter\Imagick();
                     break;
                 default:
-                    throw new \Exception('Unknown adapter: '.$adapter);
-                    break;
+                    throw new RuntimeException('Unknown adapter: '.$adapter);
                 }
             } else {
-                throw new \Exception('Unable to load the given adapter (not string or Adapter)');
+                throw new RuntimeException('Unable to load the given adapter (not string or Adapter)');
             }
         }
 
@@ -335,13 +339,12 @@ class Image
      * @return mixed a string with the filen name, null if the image
      *               does not depends on a file
      */
-    public function getFilePath()
+    public function getFilePath(): mixed
     {
         if ($this->source instanceof Source\File) {
             return $this->source->getFile();
-        } else {
-            return;
         }
+        return NULL;
     }
 
     /**
@@ -349,7 +352,7 @@ class Image
      *
      * @param string $originalFile the file path
      */
-    public function fromFile($originalFile)
+    public function fromFile(string $originalFile)
     {
         $this->source = new Source\File($originalFile);
 
@@ -359,7 +362,7 @@ class Image
     /**
      * Tells if the image is correct.
      */
-    public function correct()
+    public function correct(): bool
     {
         return $this->source->correct();
     }
@@ -375,7 +378,7 @@ class Image
     /**
      * Adds an operation.
      */
-    protected function addOperation($method, $args)
+    protected function addOperation($method, $args): void
     {
         $this->operations[] = array($method, $args);
     }
@@ -386,13 +389,13 @@ class Image
     public function __call($methodName, $args)
     {
         $adapter = $this->getAdapter();
-        $reflection = new \ReflectionClass(get_class($adapter));
+        $reflection = new ReflectionClass(get_class($adapter));
 
         if ($reflection->hasMethod($methodName)) {
             $method = $reflection->getMethod($methodName);
 
             if ($method->getNumberOfRequiredParameters() > count($args)) {
-                throw new \InvalidArgumentException('Not enough arguments given for '.$methodName);
+                throw new InvalidArgumentException('Not enough arguments given for '.$methodName);
             }
 
             $this->addOperation($methodName, $args);
@@ -400,7 +403,7 @@ class Image
             return $this;
         }
 
-        throw new \BadFunctionCallException('Invalid method: '.$methodName);
+        throw new BadFunctionCallException('Invalid method: '.$methodName);
     }
 
     /**
@@ -429,7 +432,7 @@ class Image
     /**
      * Generates the hash.
      */
-    public function generateHash($type = 'guess', $quality = 80)
+    public function generateHash($type = 'guess', $quality = 80): void
     {
         $inputInfos = $this->source->getInfos();
 
@@ -463,9 +466,9 @@ class Image
      * @param string $type    the image type
      * @param int    $quality the quality (for JPEG)
      */
-    public function cacheFile($type = 'jpg', $quality = 80, $actual = false)
+    public function cacheFile(string $type = 'jpg', int $quality = 80, $actual = false)
     {
-        if ($type == 'guess') {
+        if ( $type==='guess') {
             $type = $this->guessType();
         }
 
@@ -632,9 +635,10 @@ class Image
     {
         $this->getAdapter()->init();
     }
-
+    
     /**
      * Save the file to a given output.
+     * @throws \Exception
      */
     public function save($file, $type = 'guess', $quality = 80)
     {
@@ -656,7 +660,7 @@ class Image
         }
 
         if (!isset(self::$types[$type])) {
-            throw new \InvalidArgumentException('Given type ('.$type.') is not valid');
+            throw new InvalidArgumentException('Given type ('.$type.') is not valid');
         }
 
         $type = self::$types[$type];
@@ -692,7 +696,7 @@ class Image
             }
 
             return null === $file ? ob_get_clean() : $file;
-        } catch (\Exception $e) {
+        } catch ( Exception $e) {
             if ($this->useFallbackImage) {
                 return null === $file ? file_get_contents($this->fallback) : $this->getCacheFallback();
             } else {

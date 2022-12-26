@@ -7,7 +7,7 @@ use Gregwar\Image\ImageColor;
 
 class GD extends Common
 {
-    public static $gdTypes = array(
+    public static array $gdTypes = array(
         'jpeg'  => \IMG_JPG,
         'gif'   => \IMG_GIF,
         'png'   => \IMG_PNG,
@@ -45,7 +45,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'GD';
     }
@@ -53,7 +53,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function fillBackground($background = 0xffffff)
+    public function fillBackground(int|string $background = 0xffffff)
     {
         $w = $this->width();
         $h = $this->height();
@@ -110,7 +110,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function crop($x, $y, $width, $height)
+    public function crop(int $x, int $y, int $width, int $height)
     {
         $destination = imagecreatetruecolor($width, $height);
         imagealphablending($destination, false);
@@ -135,7 +135,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function brightness($brightness)
+    public function brightness(int $brightness)
     {
         imagefilter($this->resource, IMG_FILTER_BRIGHTNESS, $brightness);
 
@@ -145,7 +145,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function contrast($contrast)
+    public function contrast(int $contrast)
     {
         imagefilter($this->resource, IMG_FILTER_CONTRAST, $contrast);
 
@@ -175,7 +175,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function smooth($p)
+    public function smooth(int $p)
     {
         imagefilter($this->resource, IMG_FILTER_SMOOTH, $p);
 
@@ -205,7 +205,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function colorize($red, $green, $blue)
+    public function colorize(int $red, int $green, int $blue)
     {
         imagefilter($this->resource, IMG_FILTER_COLORIZE, $red, $green, $blue);
 
@@ -224,7 +224,7 @@ class GD extends Common
     }
 
     /**
-     * {@inheritdoc}
+     * Gaussian blur filter.
      */
     public function gaussianBlur($blurFactor = 1)
     {
@@ -275,7 +275,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function merge(Image $other, $x = 0, $y = 0, $width = null, $height = null)
+    public function merge(Image $other, int $x = 0, int $y = 0, int $width = null, int $height = null)
     {
         $other = clone $other;
         $other->init();
@@ -299,7 +299,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function rotate($angle, $background = 0xffffff)
+    public function rotate(float $angle, int|string $background = 0xffffff)
     {
         $this->resource = imagerotate($this->resource, $angle, ImageColor::gdAllocate($this->resource, $background));
         imagealphablending($this->resource, true);
@@ -311,7 +311,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function fill($color = 0xffffff, $x = 0, $y = 0)
+    public function fill(int|string $color = 0xffffff, int $x = 0, int $y = 0)
     {
         imagealphablending($this->resource, false);
         imagefill($this->resource, $x, $y, ImageColor::gdAllocate($this->resource, $color));
@@ -322,7 +322,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function write($font, $text, $x = 0, $y = 0, $size = 12, $angle = 0, $color = 0x000000, $align = 'left')
+    public function write(string $font, string $text, int $x = 0, int $y = 0, int $size = 12, int $angle = 0, int|string $color = 0x000000, string $align = 'left')
     {
         imagealphablending($this->resource, true);
 
@@ -346,7 +346,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function rectangle($x1, $y1, $x2, $y2, $color, $filled = false)
+    public function rectangle(int $x1, int $y1, int $x2, int $y2, int $color, bool $filled = false)
     {
         if ($filled) {
             imagefilledrectangle($this->resource, $x1, $y1, $x2, $y2, ImageColor::gdAllocate($this->resource, $color));
@@ -360,13 +360,13 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function roundedRectangle($x1, $y1, $x2, $y2, $radius, $color, $filled = false)
+    public function roundedRectangle(int $x1, int $y1, int $x2, int $y2, int $radius, int $color, bool $filled = false)
     {
         if ($color) {
             $color = ImageColor::gdAllocate($this->resource, $color);
         }
 
-        if ($filled == true) {
+        if ($filled === true) {
             imagefilledrectangle($this->resource, $x1 + $radius, $y1, $x2 - $radius, $y2, $color);
             imagefilledrectangle($this->resource, $x1, $y1 + $radius, $x1 + $radius - 1, $y2 - $radius, $color);
             imagefilledrectangle($this->resource, $x2 - $radius + 1, $y1 + $radius, $x2, $y2 - $radius, $color);
@@ -393,7 +393,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function line($x1, $y1, $x2, $y2, $color = 0x000000)
+    public function line(int $x1, int $y1, int $x2, int $y2, int|string $color = 0x000000)
     {
         imageline($this->resource, $x1, $y1, $x2, $y2, ImageColor::gdAllocate($this->resource, $color));
 
@@ -403,7 +403,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function ellipse($cx, $cy, $width, $height, $color = 0x000000, $filled = false)
+    public function ellipse(int $cx, int $cy, int $width, int $height, int|string $color = 0x000000, bool $filled = false)
     {
         if ($filled) {
             imagefilledellipse($this->resource, $cx, $cy, $width, $height, ImageColor::gdAllocate($this->resource, $color));
@@ -417,7 +417,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function circle($cx, $cy, $r, $color = 0x000000, $filled = false)
+    public function circle(int $cx, int $cy, int $r, int|string $color = 0x000000, bool $filled = false)
     {
         return $this->ellipse($cx, $cy, $r, $r, ImageColor::gdAllocate($this->resource, $color), $filled);
     }
@@ -425,7 +425,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function polygon(array $points, $color, $filled = false)
+    public function polygon(array $points, int|string $color, bool $filled = false)
     {
         if ($filled) {
             imagefilledpolygon($this->resource, $points, count($points) / 2, ImageColor::gdAllocate($this->resource, $color));
@@ -439,7 +439,7 @@ class GD extends Common
     /**
      *  {@inheritdoc}
      */
-    public function flip($flipVertical, $flipHorizontal)
+    public function flip(int $flipVertical, int $flipHorizontal)
     {
         if (!$flipVertical && !$flipHorizontal) {
             return $this;
@@ -490,7 +490,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function width()
+    public function width(): int
     {
         if (null === $this->resource) {
             $this->init();
@@ -502,7 +502,7 @@ class GD extends Common
     /**
      * {@inheritdoc}
      */
-    public function height()
+    public function height(): int
     {
         if (null === $this->resource) {
             $this->init();
@@ -522,9 +522,9 @@ class GD extends Common
     }
 
     /**
-     * Converts the image to true color.
+     * @inheritDoc
      */
-    protected function convertToTrueColor()
+    protected function convertToTrueColor(): void
     {
         if (!imageistruecolor($this->resource)) {
             if (function_exists('imagepalettetotruecolor')) {
@@ -539,7 +539,7 @@ class GD extends Common
                 $img = imagecreatetruecolor($w, $h);
                 imagecopy($img, $this->resource, 0, 0, 0, 0, $w, $h);
 
-                if ($transparentIndex != -1) {
+                if ($transparentIndex !== -1) {
                     $width = $this->width();
                     $height = $this->height();
 
@@ -605,7 +605,7 @@ class GD extends Common
     }
 
     /**
-     * Try to open the file using jpeg.
+     * {@inheritdoc}
      */
     protected function openJpeg($file)
     {
@@ -617,7 +617,7 @@ class GD extends Common
     }
 
     /**
-     * Try to open the file using gif.
+     * {@inheritdoc}
      */
     protected function openGif($file)
     {
@@ -629,7 +629,7 @@ class GD extends Common
     }
 
     /**
-     * Try to open the file using PNG.
+     * {@inheritdoc}
      */
     protected function openPng($file)
     {
@@ -641,7 +641,7 @@ class GD extends Common
     }
 
     /**
-     * Try to open the file using WEBP.
+     * {@inheritdoc}
      */
     protected function openWebp($file)
     {
@@ -653,13 +653,16 @@ class GD extends Common
     }
 
     /**
-     * Does this adapter supports type ?
+     * {@inheritdoc}
      */
-    protected function supports($type)
+    protected function supports($type): bool
     {
         return imagetypes() & self::$gdTypes[$type];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getColor($x, $y)
     {
         return imagecolorat($this->resource, $x, $y);

@@ -2,12 +2,14 @@
 
 namespace Gregwar\Image\Adapter;
 
+use RuntimeException;
+
 abstract class Common extends Adapter
 {
     /**
      * {@inheritdoc}
      */
-    public function zoomCrop($width, $height, $background = 'transparent', $xPosLetter = 'center', $yPosLetter = 'center')
+    public function zoomCrop(int $width, int $height, int|string $background = 'transparent')
     {
         $originalWidth = $this->width();
         $originalHeight = $this->height();
@@ -83,16 +85,11 @@ abstract class Common extends Adapter
 
         return $this;
     }
-
+    
     /**
-     * Resizes the image forcing the destination to have exactly the
-     * given width and the height.
-     *
-     * @param int $w  the width
-     * @param int $h  the height
-     * @param int $bg the background
+     * {@inheritdoc}
      */
-    public function forceResize($width = null, $height = null, $background = 'transparent')
+    public function forceResize(int $width = null, int $height = null, int|string $background = 'transparent')
     {
         return $this->resize($width, $height, $background, true);
     }
@@ -100,7 +97,7 @@ abstract class Common extends Adapter
     /**
      * {@inheritdoc}
      */
-    public function scaleResize($width = null, $height = null, $background = 'transparent', $crop = false)
+    public function scaleResize(int $width = null, int $height = null, int|string $background = 'transparent', bool $crop = false)
     {
         return $this->resize($width, $height, $background, false, true, $crop);
     }
@@ -108,7 +105,7 @@ abstract class Common extends Adapter
     /**
      * {@inheritdoc}
      */
-    public function cropResize($width = null, $height = null, $background = 'transparent')
+    public function cropResize(int $width = null, int $height = null, int|string $background = 'transparent')
     {
         return $this->resize($width, $height, $background, false, false, true);
     }
@@ -127,7 +124,7 @@ abstract class Common extends Adapter
         }
 
         if (!extension_loaded('exif')) {
-            throw new \RuntimeException('You need to EXIF PHP Extension to use this function');
+            throw new RuntimeException('You need to EXIF PHP Extension to use this function');
         }
 
         $exif = @exif_read_data($this->source->getInfos());
@@ -182,26 +179,38 @@ abstract class Common extends Adapter
         return $this;
     }
 
-    /**
+    /*
      * Opens the image.
      */
-    abstract protected function openGif($file);
-
-    abstract protected function openJpeg($file);
-
-    abstract protected function openPng($file);
-
-    abstract protected function openWebp($file);
+    /**
+     * Try to open the file using gif.
+     */
+    abstract protected function openGif(string $file);
+    
+    /**
+     * Try to open the file using jpeg.
+     */
+    abstract protected function openJpeg(string $file);
+    
+    /**
+     * Try to open the file using PNG.
+     */
+    abstract protected function openPng(string $file);
+    
+    /**
+     * Try to open the file using WEBP.
+     */
+    abstract protected function openWebp(string $file);
 
     /**
      * Creates an image.
      */
-    abstract protected function createImage($width, $height);
+    abstract protected function createImage(int $width, int $height);
 
     /**
      * Creating an image using $data.
      */
-    abstract protected function createImageFromData($data);
+    abstract protected function createImageFromData(string $data);
 
     /**
      * Loading image from $resource.
@@ -211,10 +220,10 @@ abstract class Common extends Adapter
         $this->resource = $resource;
     }
 
-    protected function loadFile($file, $type)
+    protected function loadFile(string $file, string $type)
     {
         if (!$this->supports($type)) {
-            throw new \RuntimeException('Type '.$type.' is not supported by GD');
+            throw new RuntimeException('Type '.$type.' is not supported by GD');
         }
 
         if ($type == 'jpeg') {
@@ -265,7 +274,7 @@ abstract class Common extends Adapter
     /**
      * {@inheritdoc}
      */
-    public function deinit()
+    public function deinit(): void
     {
         $this->resource = null;
     }
@@ -273,7 +282,7 @@ abstract class Common extends Adapter
     /**
      * {@inheritdoc}
      */
-    public function resize($width = null, $height = null, $background = 'transparent', $force = false, $rescale = false, $crop = false)
+    public function resize(int|string $width = null, int $height = null, int|string $background = 'transparent', bool $force = false, bool $rescale = false, bool $crop = false)
     {
         $current_width = $this->width();
         $current_height = $this->height();
@@ -287,23 +296,23 @@ abstract class Common extends Adapter
         }
 
         if (!$rescale && (!$force || $crop)) {
-            if ($width != null && $current_width > $width) {
+            if ($width !== null && $current_width > $width) {
                 $scale = $current_width / $width;
             }
 
-            if ($height != null && $current_height > $height) {
+            if ($height !== null && $current_height > $height) {
                 if ($current_height / $height > $scale) {
                     $scale = $current_height / $height;
                 }
             }
         } else {
-            if ($width != null) {
+            if ($width !== null) {
                 $scale = $current_width / $width;
                 $new_width = $width;
             }
 
-            if ($height != null) {
-                if ($width != null && $rescale) {
+            if ($height !== null) {
+                if ($width !== null && $rescale) {
                     $scale = max($scale, $current_height / $height);
                 } else {
                     $scale = $current_height / $height;
@@ -312,31 +321,31 @@ abstract class Common extends Adapter
             }
         }
 
-        if (!$force || $width == null || $rescale) {
+        if (!$force || $width === null || $rescale) {
             $new_width = round($current_width / $scale);
         }
 
-        if (!$force || $height == null || $rescale) {
+        if (!$force || $height === null || $rescale) {
             $new_height = round($current_height / $scale);
         }
 
-        if ($width == null || $crop) {
+        if ($width === null || $crop) {
             $width = $new_width;
         }
 
-        if ($height == null || $crop) {
+        if ($height === null || $crop) {
             $height = $new_height;
         }
 
         $this->doResize($background, (int) $width, (int) $height, (int) $new_width, (int) $new_height);
     }
-
+    
     /**
      * Trim background color arround the image.
      *
-     * @param int $bg the background
+     * @param int|string $background
      */
-    protected function _trimColor($background = 'transparent')
+    protected function _trimColor(int|string $background = 'transparent')
     {
         $width = $this->width();
         $height = $this->height();
@@ -397,21 +406,5 @@ abstract class Common extends Adapter
     /**
      * Gets the color of the $x, $y pixel.
      */
-    abstract protected function getColor($x, $y);
-
-    /**
-     * {@inheritdoc}
-     */
-    public function enableProgressive()
-    {
-        throw new \Exception('The Adapter '.$this->getName().' does not support Progressive Image loading');
-    }
-
-    /**
-     * This does nothing, but can be used to tag a ressource for instance (having a final image hash
-     * for the cache different depending on the tag)
-     */
-    public function tag($tag)
-    {
-    }
+    abstract protected function getColor(int $x, int $y);
 }

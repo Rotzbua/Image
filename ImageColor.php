@@ -2,12 +2,14 @@
 
 namespace Gregwar\Image;
 
+use InvalidArgumentException;
+
 /**
  * Color manipulation class.
  */
 class ImageColor
 {
-    private static $colors = array(
+    private static array $colors = array(
         'black'       => 0x000000,
         'silver'      => 0xc0c0c0,
         'gray'        => 0x808080,
@@ -42,14 +44,14 @@ class ImageColor
 
         $c = imagecolorallocatealpha($image, $r, $g, $b, $a);
 
-        if ($color == 'transparent') {
+        if ( $color==='transparent') {
             imagecolortransparent($image, $c);
         }
 
         return $c;
     }
 
-    public static function parse($color)
+    public static function parse(int|string $color): int
     {
         // Direct color representation (ex: 0xff0000)
         if (!is_string($color) && is_numeric($color)) {
@@ -68,11 +70,11 @@ class ImageColor
             if (preg_match('/^(#|0x|)([0-9a-f]{3,6})/i', $color_string, $matches)) {
                 $col = $matches[2];
 
-                if (strlen($col) == 6) {
+                if (strlen($col) === 6) {
                     return hexdec($col);
                 }
 
-                if (strlen($col) == 3) {
+                if (strlen($col) === 3) {
                     $r = '';
                     for ($i = 0; $i < 3; ++$i) {
                         $r .= $col[$i].$col[$i];
@@ -93,6 +95,6 @@ class ImageColor
             }
         }
 
-        throw new \InvalidArgumentException('Invalid color: '.$color);
+        throw new InvalidArgumentException('Invalid color: '.$color);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace Gregwar\Image\Exceptions;
 
-class GenerationError extends \Exception
+use Exception;
+
+class GenerationError extends Exception
 {
+    private $newNewFile;
     public function __construct($newNewFile)
     {
         $this->newNewFile = $newNewFile;

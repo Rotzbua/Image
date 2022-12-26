@@ -3,48 +3,41 @@
 namespace Gregwar\Image\Adapter;
 
 use Gregwar\Image\Image;
+use RuntimeException;
 
 class Imagick extends Common
 {
     public function __construct()
     {
-        throw new \Exception('Imagick is not supported right now');
+        throw new RuntimeException('Imagick is not supported right now');
     }
-
+    
     /**
-     * Gets the name of the adapter.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'ImageMagick';
     }
-
+    
     /**
-     * Image width.
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function width()
+    public function width(): int
     {
         // TODO: Implement width() method.
     }
-
+    
     /**
-     * Image height.
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function height()
+    public function height(): int
     {
         // TODO: Implement height() method.
     }
-
+    
     /**
-     * Save the image as a gif.
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function saveGif($file)
     {
@@ -81,19 +74,15 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function crop($x, $y, $width, $height)
+    public function crop(int $x, int $y, int $width, int $height)
     {
         // TODO: Implement crop() method.
     }
-
+    
     /**
-     * Fills the image background to $bg if the image is transparent.
-     *
-     * @param int $background background color
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function fillBackground($background = 0xffffff)
+    public function fillBackground(int|string $background = 0xffffff)
     {
         // TODO: Implement fillBackground() method.
     }
@@ -115,7 +104,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function brightness($brightness)
+    public function brightness(int $brightness)
     {
         // TODO: Implement brightness() method.
     }
@@ -127,7 +116,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function contrast($contrast)
+    public function contrast(int $contrast)
     {
         // TODO: Implement contrast() method.
     }
@@ -159,7 +148,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function smooth($p)
+    public function smooth(int $p)
     {
         // TODO: Implement smooth() method.
     }
@@ -193,7 +182,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function colorize($red, $green, $blue)
+    public function colorize(int $red, int $green, int $blue)
     {
         // TODO: Implement colorize() method.
     }
@@ -211,15 +200,15 @@ class Imagick extends Common
     /**
      * Merge with another image.
      *
-     * @param Image $other
-     * @param int   $x
-     * @param int   $y
-     * @param int   $width
-     * @param int   $height
+     * @param Image    $other
+     * @param int      $x
+     * @param int      $y
+     * @param int|null $width
+     * @param int|null $height
      *
      * @return $this
      */
-    public function merge(Image $other, $x = 0, $y = 0, $width = null, $height = null)
+    public function merge(Image $other, int $x = 0, int $y = 0, int $width = null, int $height = null)
     {
         // TODO: Implement merge() method.
     }
@@ -232,7 +221,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function rotate($angle, $background = 0xffffff)
+    public function rotate(float $angle, int $background = 0xffffff)
     {
         // TODO: Implement rotate() method.
     }
@@ -246,7 +235,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function fill($color = 0xffffff, $x = 0, $y = 0)
+    public function fill(int $color = 0xffffff, int $x = 0, int $y = 0)
     {
         // TODO: Implement fill() method.
     }
@@ -263,7 +252,7 @@ class Imagick extends Common
      * @param int    $color
      * @param string $align
      */
-    public function write($font, $text, $x = 0, $y = 0, $size = 12, $angle = 0, $color = 0x000000, $align = 'left')
+    public function write(string $font, string $text, int $x = 0, int $y = 0, int $size = 12, int $angle = 0, int $color = 0x000000, string $align = 'left')
     {
         // TODO: Implement write() method.
     }
@@ -280,7 +269,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function rectangle($x1, $y1, $x2, $y2, $color, $filled = false)
+    public function rectangle(int $x1, int $y1, int $x2, int $y2, int $color, bool $filled = false)
     {
         // TODO: Implement rectangle() method.
     }
@@ -298,7 +287,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function roundedRectangle($x1, $y1, $x2, $y2, $radius, $color, $filled = false)
+    public function roundedRectangle(int $x1, int $y1, int $x2, int $y2, int $radius, int $color, bool $filled = false)
     {
         // TODO: Implement roundedRectangle() method.
     }
@@ -306,15 +295,15 @@ class Imagick extends Common
     /**
      * Draws a line.
      *
-     * @param int $x1
-     * @param int $y1
-     * @param int $x2
-     * @param int $y2
-     * @param int $color
+     * @param int        $x1
+     * @param int        $y1
+     * @param int        $x2
+     * @param int        $y2
+     * @param int|string $color
      *
      * @return $this
      */
-    public function line($x1, $y1, $x2, $y2, $color = 0x000000)
+    public function line(int $x1, int $y1, int $x2, int $y2, int|string $color = 0x000000)
     {
         // TODO: Implement line() method.
     }
@@ -322,16 +311,16 @@ class Imagick extends Common
     /**
      * Draws an ellipse.
      *
-     * @param int  $cx
-     * @param int  $cy
-     * @param int  $width
-     * @param int  $height
-     * @param int  $color
-     * @param bool $filled
+     * @param int        $cx
+     * @param int        $cy
+     * @param int        $width
+     * @param int        $height
+     * @param int|string $color
+     * @param bool       $filled
      *
      * @return $this
      */
-    public function ellipse($cx, $cy, $width, $height, $color = 0x000000, $filled = false)
+    public function ellipse(int $cx, int $cy, int $width, int $height, int|string $color = 0x000000, bool $filled = false)
     {
         // TODO: Implement ellipse() method.
     }
@@ -347,7 +336,7 @@ class Imagick extends Common
      *
      * @return $this
      */
-    public function circle($cx, $cy, $r, $color = 0x000000, $filled = false)
+    public function circle(int $cx, int $cy, int $r, int|string $color = 0x000000, bool $filled = false)
     {
         // TODO: Implement circle() method.
     }
@@ -355,13 +344,13 @@ class Imagick extends Common
     /**
      * Draws a polygon.
      *
-     * @param array $points
-     * @param int   $color
-     * @param bool  $filled
+     * @param array      $points
+     * @param int|string $color
+     * @param bool       $filled
      *
      * @return $this
      */
-    public function polygon(array $points, $color, $filled = false)
+    public function polygon(array $points, int|string $color, bool $filled = false)
     {
         // TODO: Implement polygon() method.
     }
@@ -369,7 +358,7 @@ class Imagick extends Common
     /**
      *  {@inheritdoc}
      */
-    public function flip($flipVertical, $flipHorizontal)
+    public function flip(int $flipVertical, int $flipHorizontal)
     {
         // TODO: Implement flip method
     }
@@ -428,5 +417,11 @@ class Imagick extends Common
     protected function getColor($x, $y)
     {
         // TODO: Implement getColor() method.
+    }
+    /**
+     * @inheritDoc
+     */
+    public function saveWebp(string $file, int $quality){
+        // TODO: Implement saveWebp() method.
     }
 }

@@ -35,21 +35,21 @@ interface AdapterInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Image width.
      *
      * @return int
      */
-    public function width();
+    public function width(): int;
 
     /**
      * Image height.
      *
      * @return int
      */
-    public function height();
+    public function height(): int;
 
     /**
      * Init the resource.
@@ -59,74 +59,78 @@ interface AdapterInterface
     public function init();
 
     /**
-     * Unload the resource
+     * Unload the resource.
      */
-    public function deinit();
+    public function deinit(): void;
 
     /**
      * Save the image as a gif.
      *
      * @return $this
      */
-    public function saveGif($file);
+    public function saveGif(string $file);
 
     /**
      * Save the image as a png.
      *
      * @return $this
      */
-    public function savePng($file);
+    public function savePng(string $file);
 
     /**
      * Save the image as a Webp.
      *
+     * @param int $quality quality ranges from 0 (the worst quality, smaller file) to 100 (the best quality, biggest file).
+     *
      * @return $this
      */
-    public function saveWebp($file, $quality);
+    public function saveWebp(string $file, int $quality);
 
     /**
      * Save the image as a jpeg.
      *
+     * @param int $quality quality ranges from 0 (the worst quality, smaller file) to 100 (the best quality, biggest file).
+     *
      * @return $this
      */
-    public function saveJpeg($file, $quality);
-
+    public function saveJpeg(string $file, int $quality);
+    
     /**
      * Works as resize() excepts that the layout will be cropped.
      *
-     * @param int $width      the width
-     * @param int $height     the height
-     * @param int $background the background
+     * @param int|null   $width      the width
+     * @param int|null   $height     the height
+     * @param int|string $background the background
      *
      * @return $this
      */
-    public function cropResize($width = null, $height = null, $background = 0xffffff);
-
+    public function cropResize(int $width = null, int $height = null, int|string $background = 0xffffff);
+    
     /**
      * Resize the image preserving scale. Can enlarge it.
      *
-     * @param int  $width      the width
-     * @param int  $height     the height
-     * @param int  $background the background
-     * @param bool $crop
+     * @param int|null   $width      the width
+     * @param int|null   $height     the height
+     * @param int|string $background the background
+     * @param bool       $crop
      *
      * @return $this
      */
-    public function scaleResize($width = null, $height = null, $background = 0xffffff, $crop = false);
-
+    public function scaleResize(int $width = null, int $height = null, int|string $background = 0xffffff, bool $crop = false);
+    
     /**
      * Resizes the image. It will never be enlarged.
      *
-     * @param int  $width      the width
-     * @param int  $height     the height
-     * @param int  $background the background
-     * @param bool $force
-     * @param bool $rescale
-     * @param bool $crop
+     * @param int|string|null $width      the width
+     * @param int|null        $height     the height
+     * @param int|string      $background the background
+     * @param bool            $force
+     * @param bool            $rescale
+     * @param bool            $crop
      *
      * @return $this
      */
-    public function resize($width = null, $height = null, $background = 0xffffff, $force = false, $rescale = false, $crop = false);
+    public function resize(int|string $width = null, int $height = null, int|string $background = 0xffffff, bool $force = false, bool $rescale = false, bool $crop = false);
 
     /**
      * Crops the image.
@@ -138,7 +142,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function crop($x, $y, $width, $height);
+    public function crop(int $x, int $y, int $width, int $height);
 
     /**
      * enable progressive image loading.
@@ -146,38 +150,38 @@ interface AdapterInterface
      * @return $this
      */
     public function enableProgressive();
-
+    
     /**
      * Resizes the image forcing the destination to have exactly the
      * given width and the height.
      *
-     * @param int $width      the width
-     * @param int $height     the height
-     * @param int $background the background
+     * @param int|null   $width      the width
+     * @param int|null   $height     the height
+     * @param int|string $background the background
      *
      * @return $this
      */
-    public function forceResize($width = null, $height = null, $background = 0xffffff);
+    public function forceResize(int $width = null, int $height = null, int|string $background = 0xffffff);
 
     /**
      * Perform a zoom crop of the image to desired width and height.
      *
-     * @param int $width      Desired width
-     * @param int $height     Desired height
-     * @param int $background
+     * @param int        $width  Desired width
+     * @param int        $height Desired height
+     * @param int|string $background
      *
      * @return $this
      */
-    public function zoomCrop($width, $height, $background = 0xffffff);
-
+    public function zoomCrop(int $width, int $height, int|string $background = 0xffffff);
+    
     /**
      * Fills the image background to $bg if the image is transparent.
      *
-     * @param int $background background color
+     * @param int|string $background background color
      *
      * @return $this
      */
-    public function fillBackground($background = 0xffffff);
+    public function fillBackground(int|string $background = 0xffffff);
 
     /**
      * Negates the image.
@@ -193,7 +197,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function brightness($brightness);
+    public function brightness(int $brightness);
 
     /**
      * Contrasts the image.
@@ -202,7 +206,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function contrast($contrast);
+    public function contrast(int $contrast);
 
     /**
      * Apply a grayscale level effect on the image.
@@ -225,7 +229,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function smooth($p);
+    public function smooth(int $p);
 
     /**
      * Sharps the image.
@@ -250,7 +254,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function colorize($red, $green, $blue);
+    public function colorize(int $red, int $green, int $blue);
 
     /**
      * apply sepia to the image.
@@ -262,50 +266,50 @@ interface AdapterInterface
     /**
      * Merge with another image.
      *
-     * @param Image $other
-     * @param int   $x
-     * @param int   $y
-     * @param int   $width
-     * @param int   $height
+     * @param Image    $other
+     * @param int      $x
+     * @param int      $y
+     * @param int|null $width
+     * @param int|null $height
      *
      * @return $this
      */
-    public function merge(Image $other, $x = 0, $y = 0, $width = null, $height = null);
-
+    public function merge(Image $other, int $x = 0, int $y = 0, int $width = null, int $height = null);
+    
     /**
      * Rotate the image.
      *
-     * @param float $angle
-     * @param int   $background
+     * @param float      $angle
+     * @param int|string $background
      *
      * @return $this
      */
-    public function rotate($angle, $background = 0xffffff);
+    public function rotate(float $angle, int|string $background = 0xffffff);
 
     /**
      * Fills the image.
      *
-     * @param int $color
+     * @param int|string $color
      * @param int $x
      * @param int $y
      *
      * @return $this
      */
-    public function fill($color = 0xffffff, $x = 0, $y = 0);
-
+    public function fill(int|string $color = 0xffffff, int $x = 0, int $y = 0);
+    
     /**
      * write text to the image.
      *
-     * @param string $font
-     * @param string $text
-     * @param int    $x
-     * @param int    $y
-     * @param int    $size
-     * @param int    $angle
-     * @param int    $color
-     * @param string $align
+     * @param string     $font
+     * @param string     $text
+     * @param int        $x
+     * @param int        $y
+     * @param int        $size
+     * @param int        $angle
+     * @param int|string $color
+     * @param string     $align
      */
-    public function write($font, $text, $x = 0, $y = 0, $size = 12, $angle = 0, $color = 0x000000, $align = 'left');
+    public function write(string $font, string $text, int $x = 0, int $y = 0, int $size = 12, int $angle = 0, int|string $color = 0x000000, string $align = 'left');
 
     /**
      * Draws a rectangle.
@@ -319,7 +323,7 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function rectangle($x1, $y1, $x2, $y2, $color, $filled = false);
+    public function rectangle(int $x1, int $y1, int $x2, int $y2, int $color, bool $filled = false);
 
     /**
      * Draws a rounded rectangle.
@@ -334,58 +338,58 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function roundedRectangle($x1, $y1, $x2, $y2, $radius, $color, $filled = false);
+    public function roundedRectangle(int $x1, int $y1, int $x2, int $y2, int $radius, int $color, bool $filled = false);
 
     /**
      * Draws a line.
      *
-     * @param int $x1
-     * @param int $y1
-     * @param int $x2
-     * @param int $y2
-     * @param int $color
+     * @param int        $x1
+     * @param int        $y1
+     * @param int        $x2
+     * @param int        $y2
+     * @param int|string $color
      *
      * @return $this
      */
-    public function line($x1, $y1, $x2, $y2, $color = 0x000000);
+    public function line(int $x1, int $y1, int $x2, int $y2, int|string $color = 0x000000);
 
     /**
      * Draws an ellipse.
      *
-     * @param int  $cx
-     * @param int  $cy
-     * @param int  $width
-     * @param int  $height
-     * @param int  $color
-     * @param bool $filled
+     * @param int        $cx
+     * @param int        $cy
+     * @param int        $width
+     * @param int        $height
+     * @param int|string $color
+     * @param bool       $filled
      *
      * @return $this
      */
-    public function ellipse($cx, $cy, $width, $height, $color = 0x000000, $filled = false);
-
+    public function ellipse(int $cx, int $cy, int $width, int $height, int|string $color = 0x000000, bool $filled = false);
+    
     /**
      * Draws a circle.
      *
-     * @param int  $cx
-     * @param int  $cy
-     * @param int  $r
-     * @param int  $color
-     * @param bool $filled
+     * @param int        $cx
+     * @param int        $cy
+     * @param int        $r
+     * @param int|string $color
+     * @param bool       $filled
      *
      * @return $this
      */
-    public function circle($cx, $cy, $r, $color = 0x000000, $filled = false);
+    public function circle(int $cx, int $cy, int $r, int|string $color = 0x000000, bool $filled = false);
 
     /**
      * Draws a polygon.
      *
-     * @param array $points
-     * @param int   $color
-     * @param bool  $filled
+     * @param array      $points
+     * @param int|string $color
+     * @param bool       $filled
      *
      * @return $this
      */
-    public function polygon(array $points, $color, $filled = false);
+    public function polygon(array $points, int|string $color, bool $filled = false);
 
     /**
      * Flips the image.
@@ -395,5 +399,5 @@ interface AdapterInterface
      *
      * @return $this
      */
-    public function flip($flipVertical, $flipHorizontal);
+    public function flip(int $flipVertical, int $flipHorizontal);
 }

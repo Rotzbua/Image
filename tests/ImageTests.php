@@ -1,14 +1,14 @@
 <?php
 
 use Gregwar\Cache\Cache;
-use Gregwar\Cache\CacheInterface;
 use Gregwar\Image\Image;
 use Gregwar\Image\ImageColor;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Unit testing for Image.
  */
-class ImageTests extends \PHPUnit\Framework\TestCase
+class ImageTests extends TestCase
 {
     /**
      * Testing the basic width & height.
@@ -252,7 +252,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
     public function testTransparent(): void
     {
         $gif = $this->output('transparent.gif');
-        $i = Image::create(200, 100)
+        Image::create(200, 100)
             ->fill('transparent')
             ->save($gif, 'gif');
 
@@ -277,7 +277,7 @@ class ImageTests extends \PHPUnit\Framework\TestCase
 
     public function testNonExistingFileNoFallback(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         Image::open('non_existing_file.jpg')
             ->useFallback(false)
@@ -481,10 +481,10 @@ class ImageTests extends \PHPUnit\Framework\TestCase
         $dir = $this->output('');
         `rm -rf $dir`;
         if( !mkdir($dir) && !is_dir($dir) ){
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
         if( !mkdir($concurrentDirectory = $this->output('cache')) && !is_dir($concurrentDirectory) ){
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
     }
 }
